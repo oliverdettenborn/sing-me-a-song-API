@@ -2,12 +2,12 @@ require("dotenv").config();
 
 module.exports = {
   development: {
-    url: process.env.DB_LOCAL_URL,
+    url: process.env.DATABASE_URL,
   },
   test: {
-    url: process.env.DB_LOCAL_URL,
+    url: process.env.DATABASE_URL,
   },
   production: {
-    url: process.env.DATABASE_URL,
+    url: process.env.DATABASE_DEPLOY,
   },
 };
