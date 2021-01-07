@@ -36,4 +36,14 @@ describe("POST /genres", () => {
     expect(response.body).toHaveProperty("id");
     expect(response.body).toMatchObject(body);
   });
+
+  it("should return 409 when this genre alredy exists", async () => {
+    const body = {
+      name: "lo-Fi",
+    };
+    const response = await agent.post("/api/genres").send(body);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("id");
+    expect(response.body).toMatchObject(body);
+  });
 });
