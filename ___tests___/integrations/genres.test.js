@@ -34,16 +34,26 @@ describe("POST /genres", () => {
     const response = await agent.post("/api/genres").send(body);
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty("id");
-    expect(response.body).toMatchObject(body);
+    expect(response.body.name).toBe("lo-fi");
   });
 
   it("should return 409 when this genre alredy exists", async () => {
+    await agent.post("/api/genres").send({ name: "Lo-fi" });
     const body = {
       name: "lo-Fi",
     };
     const response = await agent.post("/api/genres").send(body);
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toMatchObject(body);
+    expect(response.status).toBe(409);
+  });
+});
+
+describe("GET /genres", () => {
+  it("should return 201 when send body with valid attributes", async () => {
+    await agent.post("/api/genres").send({ name: "Lo-fi" });
+
+    const response = await agent.get("/api/genres");
+    expect(response.status).toBe(200);
+    expect(response.body[0]).toHaveProperty("id");
+    expect(response.body[0].name).toBe("lo-fi");
   });
 });

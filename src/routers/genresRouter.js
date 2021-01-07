@@ -9,16 +9,21 @@ router.post("/", async (req, res) => {
   if (genresSchemas.create.validate(req.body).error) {
     return res.status(422).send({ message: "Name invalid" });
   }
-  const name = sanitize(req.body.name);
+  const name = String(sanitize(req.body.name)).toLowerCase();
 
   try {
     const newGenre = await genresController.create(name);
     res.status(201).send(newGenre);
   } catch (err) {
-    console.error(err);
+    console.log(err);
     if (err instanceof AlredyExistsError)
       res.status(409).send({ message: "This genre alredy exists" });
   }
+});
+
+router.get("/", async (req, res) => {
+  const genres = await genresController.getAll();
+  res.send(genres);
 });
 
 module.exports = router;
