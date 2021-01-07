@@ -50,10 +50,13 @@ describe("POST /genres", () => {
 describe("GET /genres", () => {
   it("should return 201 when send body with valid attributes", async () => {
     await agent.post("/api/genres").send({ name: "Lo-fi" });
+    await agent.post("/api/genres").send({ name: "Pop" });
 
     const response = await agent.get("/api/genres");
     expect(response.status).toBe(200);
     expect(response.body[0]).toHaveProperty("id");
     expect(response.body[0].name).toBe("lo-fi");
+    expect(response.body[1]).toHaveProperty("id");
+    expect(response.body[1].name).toBe("pop");
   });
 });

@@ -11,7 +11,9 @@ async function create(name) {
 }
 
 function getAll() {
-  return Genre.findAll();
+  return Genre.findAll({
+    order: [["name", "ASC"]],
+  });
 }
 
 module.exports = {
