@@ -1,5 +1,5 @@
-const { Sequelize } = require("sequelize");
-const db = require("../database");
+const { Sequelize } = require('sequelize');
+const db = require('../database');
 
 class GenreRecomendation extends Sequelize.Model {}
 
@@ -17,8 +17,8 @@ GenreRecomendation.init(
   {
     sequelize: db,
     timestamps: false,
-    modelName: "genreRecomendation",
-  }
+    modelName: 'genreRecomendation',
+  },
 );
 
 module.exports = GenreRecomendation;

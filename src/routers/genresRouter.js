@@ -27,7 +27,17 @@ router.get('/', async (req, res) => {
     res.send(genres);
   } catch (e) {
     console.error(e);
-    res.sensStatus(500);
+    res.sendStatus(500);
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const genresList = await genresController.getById(+req.params.id);
+    res.send(genresList);
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(500);
   }
 });
 

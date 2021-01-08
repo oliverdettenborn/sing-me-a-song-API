@@ -1,8 +1,5 @@
-const { Sequelize } = require("sequelize");
-const db = require("../database");
-
-const Genre = require("./Genre");
-const GenreRecomendation = require("./GenreRecomendation");
+const { Sequelize } = require('sequelize');
+const db = require('../database');
 
 class Recomendation extends Sequelize.Model {}
 
@@ -32,11 +29,8 @@ Recomendation.init(
   {
     sequelize: db,
     timestamps: false,
-    modelName: "recomendation",
-  }
+    modelName: 'recomendation',
+  },
 );
-
-Recomendation.belongsToMany(Genre, { through: GenreRecomendation });
-Genre.belongsToMany(Recomendation, { through: GenreRecomendation });
 
 module.exports = Recomendation;

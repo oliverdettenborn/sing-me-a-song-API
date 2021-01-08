@@ -1,7 +1,11 @@
-const { Sequelize } = require("sequelize");
-const db = require("../database");
+const { Sequelize } = require('sequelize');
+const db = require('../database');
 
-class Genre extends Sequelize.Model {}
+class Genre extends Sequelize.Model {
+  static calcScore({ recomendations }) {
+    return recomendations.reduce((accumulator, item) => accumulator + item.score, 0);
+  }
+}
 
 Genre.init(
   {
@@ -20,8 +24,8 @@ Genre.init(
   {
     sequelize: db,
     timestamps: false,
-    modelName: "genre",
-  }
+    modelName: 'genre',
+  },
 );
 
 module.exports = Genre;
