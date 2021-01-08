@@ -2,7 +2,7 @@ const router = require("express").Router();
 const sanitize = require("sanitize-html");
 const recomendationsController = require("../controllers/recomendationsController");
 const { recomendationsSchemas } = require("../schemas");
-const { InvalidGenreError } = require("../errors");
+const { InvalidGenreError, NotFoundError } = require("../errors");
 
 router.post("/", async (req, res) => {
   const { error } = recomendationsSchemas.create.validate(req.body);
@@ -24,6 +24,18 @@ router.post("/", async (req, res) => {
     console.error(err);
     if (err instanceof InvalidGenreError)
       res.status(400).send({ message: "All genresIds are invalid" });
+    else res.sendStatus(500);
+  }
+});
+
+router.post("/:id/upvote", async (req, res) => {
+  try {
+    await recomendationsController.upVote(+req.params.id);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    if (err instanceof NotFoundError)
+      res.status(404).send({ message: "Recomendation not found" });
     else res.sendStatus(500);
   }
 });

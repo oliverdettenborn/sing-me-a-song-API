@@ -67,3 +67,28 @@ describe("POST /recomendations", () => {
     });
   });
 });
+
+describe("POST /recomendations/:id/upvote", () => {
+  it("should return 201 when sucess to up score recomendation", async () => {
+    const result = await agent.post("/api/genres").send({ name: "Forró" });
+    const result2 = await agent.post("/api/recomendations").send({
+      name: "Barrões da Pisadinha - Basta você me ligar",
+      genresIds: [result.body.id],
+      youtubeLink: "https://www.youtube.com/watch?v=k4xGU8xoA6w",
+    });
+    const id = result2.body.id;
+
+    const response = await agent.post(`/api/recomendations/${id}/upvote`);
+    expect(response.status).toBe(200);
+
+    await agent.post(`/api/recomendations/${id}/upvote`);
+    await agent.post(`/api/recomendations/${id}/upvote`);
+    await agent.post(`/api/recomendations/${id}/upvote`);
+    await agent.post(`/api/recomendations/${id}/upvote`);
+    const result3 = await db.query(
+      `SELECT * FROM recomendations WHERE id=${id}`
+    );
+    const recomendation = result3[0][0];
+    expect(recomendation.score).toBe(5);
+  });
+});

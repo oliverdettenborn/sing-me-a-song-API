@@ -22,8 +22,13 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const genres = await genresController.getAll();
-  res.send(genres);
+  try {
+    const genres = await genresController.getAll();
+    res.send(genres);
+  } catch (e) {
+    console.error(e);
+    res.sensStatus(500);
+  }
 });
 
 module.exports = router;
