@@ -30,22 +30,21 @@ async function upVote(id) {
   const recomendation = await Recomendation.findByPk(id);
   if (!recomendation) throw new NotFoundError();
 
-  recomendation.increment('score');
-  await recomendation.save();
+  await recomendation.increment('score');
 }
 
 async function downVote(id) {
   const recomendation = await Recomendation.findByPk(id);
   if (!recomendation) throw new NotFoundError();
 
-  recomendation.decrement('score');
-  await recomendation.save();
+  await recomendation.decrement('score');
 
   if (recomendation.score < -5) {
     await GenreRecomendation.destroy({
       where: { recomendationId: recomendation.id },
     });
     await recomendation.destroy();
+    throw new NotFoundError();
   }
 }
 
