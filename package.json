@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npx jest -i",
     "dev": "npx nodemon src/server.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "build": "npx sequelize-cli db:migrate"
   },
   "repository": {
     "type": "git",
