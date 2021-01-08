@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx jest -i",
     "dev": "npx nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
