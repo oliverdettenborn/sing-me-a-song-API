@@ -8,6 +8,6 @@ module.exports = {
     url: process.env.DATABASE_URL,
   },
   production: {
-    url: process.env.DATABASE_DEPLOY,
+    url: process.env.DATABASE_URL,
   },
 };
