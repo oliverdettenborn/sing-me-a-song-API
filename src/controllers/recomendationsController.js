@@ -84,9 +84,45 @@ async function getRandomRecomendation() {
   return sortItemOfList(listRecomendations);
 }
 
+async function getRecomendationByGenre(id) {
+  const category = sortCategoryOfRecomendation();
+  const operator = category === 'best' ? Op.gte : Op.lt;
+
+  let listRecomendations = await Recomendation.findAll(
+    {
+      where: { score: { [operator]: 10 } },
+      include: {
+        model: Genre,
+        where: { id },
+        through: {
+          attributes: [],
+        },
+      },
+    },
+  );
+
+  if (listRecomendations.length === 0) {
+    listRecomendations = await Recomendation.findAll({
+      include: {
+        model: Genre,
+        where: { id },
+        through: {
+          attributes: [],
+        },
+      },
+    });
+
+    if (listRecomendations.length === 0) {
+      throw new NotFoundError();
+    }
+  }
+  return sortItemOfList(listRecomendations);
+}
+
 module.exports = {
   create,
   upVote,
   downVote,
   getRandomRecomendation,
+  getRecomendationByGenre,
 };

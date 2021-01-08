@@ -4,7 +4,7 @@ const { sortCategoryOfRecomendation, sortItemOfList } = require('../../src/utils
 describe('Sort Random Category', () => {
   it('should return best or worst (70/30) ', () => {
     const result = sortCategoryOfRecomendation();
-    expect(result).toEqual('best' || 'worst');
+    expect(['best', 'worst']).toContain(result);
   });
 });
 

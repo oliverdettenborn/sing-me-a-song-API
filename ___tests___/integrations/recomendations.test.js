@@ -199,3 +199,36 @@ describe('GET /recomendations/random', () => {
     });
   });
 });
+
+describe('GET /recomendations/genres/:id/random', () => {
+  it('should return 404 when dont get a random recomendation because it havent post recomendation yet', async () => {
+    const result = await agent.post('/api/genres').send({ name: 'Forró' });
+    const response = await agent.get(`/api/recomendations/genres/${result.body.id}/random`);
+    expect(response.status).toBe(404);
+  });
+
+  it('should return 200 when sucess to get a random recomendation', async () => {
+    const result = await agent.post('/api/genres').send({ name: 'Forró' });
+    await agent.post('/api/genres').send({ name: 'Lo-fi' });
+    await agent.post('/api/recomendations').send({
+      name: 'Barrões da Pisadinha - Basta você me ligar',
+      genresIds: [result.body.id],
+      youtubeLink: 'https://www.youtube.com/watch?v=k4xGU8xoA6w',
+    });
+
+    const response = await agent.get(`/api/recomendations/genres/${result.body.id}/random`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject({
+      name: 'Barrões da Pisadinha - Basta você me ligar',
+      youtubeLink: 'https://www.youtube.com/watch?v=k4xGU8xoA6w',
+      score: 0,
+      genres: [
+        {
+          id: result.body.id,
+          name: 'forró',
+        },
+      ],
+    });
+  });
+});
