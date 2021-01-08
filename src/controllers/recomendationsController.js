@@ -1,7 +1,9 @@
+const { Op } = require('sequelize');
 const Recomendation = require('../models/Recomendation');
 const Genre = require('../models/Genre');
 const GenreRecomendation = require('../models/GenreRecomendation');
 const { InvalidGenreError, NotFoundError } = require('../errors');
+const { sortCategoryOfRecomendation, sortItemOfList } = require('../utils/random');
 
 async function create({ name, genresIds, youtubeLink }) {
   const validGenres = await Genre.findAll({ where: { id: genresIds } });
@@ -48,8 +50,43 @@ async function downVote(id) {
   }
 }
 
+async function getRandomRecomendation() {
+  const category = sortCategoryOfRecomendation();
+  const operator = category === 'best' ? Op.gte : Op.lt;
+
+  let listRecomendations = await Recomendation.findAll(
+    {
+      where: { score: { [operator]: 10 } },
+      include: {
+        model: Genre,
+        through: {
+          attributes: [],
+        },
+      },
+    },
+  );
+
+  if (listRecomendations.length === 0) {
+    listRecomendations = await Recomendation.findAll({
+      include: {
+        model: Genre,
+        through: {
+          attributes: [],
+        },
+      },
+    });
+
+    if (listRecomendations.length === 0) {
+      throw new NotFoundError();
+    }
+  }
+
+  return sortItemOfList(listRecomendations);
+}
+
 module.exports = {
   create,
   upVote,
   downVote,
+  getRandomRecomendation,
 };

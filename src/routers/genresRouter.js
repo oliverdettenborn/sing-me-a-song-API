@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
     const newGenre = await genresController.create(name);
     res.status(201).send(newGenre);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (err instanceof AlredyExistsError) res.status(409).send({ message: 'This genre alredy exists' });
   }
 });
