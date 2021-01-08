@@ -40,8 +40,9 @@ async function downVote(id) {
 
   recomendation.decrement('score');
   await recomendation.save();
+
   if (recomendation.score < -5) {
-    await GenreRecomendation.detroy({
+    await GenreRecomendation.destroy({
       where: { recomendationId: recomendation.id },
     });
     await recomendation.destroy();
