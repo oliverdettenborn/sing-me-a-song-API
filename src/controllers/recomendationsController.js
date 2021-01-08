@@ -119,10 +119,29 @@ async function getRecomendationByGenre(id) {
   return sortItemOfList(listRecomendations);
 }
 
+async function getTopRecomendations(limit) {
+  const recomendationsTop = await Recomendation.findAll(
+    {
+      limit,
+      order: [['score', 'DESC']],
+      include: {
+        model: Genre,
+        through: {
+          attributes: [],
+        },
+      },
+    },
+  );
+
+  if (recomendationsTop.length === 0) throw new NotFoundError();
+  return recomendationsTop;
+}
+
 module.exports = {
   create,
   upVote,
   downVote,
   getRandomRecomendation,
   getRecomendationByGenre,
+  getTopRecomendations,
 };

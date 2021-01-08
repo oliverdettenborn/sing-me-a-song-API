@@ -77,4 +77,16 @@ router.get('/genres/:id/random', async (req, res) => {
   }
 });
 
+router.get('/top/:amount', async (req, res) => {
+  try {
+    const recomendation = await recomendationsController.getTopRecomendations(+req.params.amount);
+    res.send(recomendation);
+  } catch (err) {
+    console.error(err);
+    if (err instanceof NotFoundError) {
+      res.status(404).send({ message: 'No recommendations registered yet' });
+    } else res.sendStatus(500);
+  }
+});
+
 module.exports = router;

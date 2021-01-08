@@ -232,3 +232,65 @@ describe('GET /recomendations/genres/:id/random', () => {
     });
   });
 });
+
+describe('GET /recomendations/top/:amout', () => {
+  it('should return 404 when dont get a random recomendation because it havent post recomendation yet', async () => {
+    const response = await agent.get('/api/recomendations/top/3');
+    expect(response.status).toBe(404);
+  });
+
+  it('should return 200 when sucess to get a random recomendation', async () => {
+    const result = await agent.post('/api/genres').send({ name: 'Forró' });
+    await agent.post('/api/genres').send({ name: 'Lo-fi' });
+    const rec1 = await agent.post('/api/recomendations').send({
+      name: 'Teste 1 - Basta você me ligar',
+      genresIds: [result.body.id],
+      youtubeLink: 'https://www.youtube.com/watch?v=k4xGU8xoA6w',
+    });
+    const rec2 = await agent.post('/api/recomendations').send({
+      name: 'Teste 2 - Basta você me ligar',
+      genresIds: [result.body.id],
+      youtubeLink: 'https://www.youtube.com/watch?v=k4xGU8xoA6w',
+    });
+    const rec3 = await agent.post('/api/recomendations').send({
+      name: 'Teste 3 - Basta você me ligar',
+      genresIds: [result.body.id],
+      youtubeLink: 'https://www.youtube.com/watch?v=k4xGU8xoA6w',
+    });
+    await agent.post(`/api/recomendations/${rec1.body.id}/upvote`);
+    await agent.post(`/api/recomendations/${rec2.body.id}/upvote`);
+    await agent.post(`/api/recomendations/${rec2.body.id}/upvote`);
+    await agent.post(`/api/recomendations/${rec3.body.id}/upvote`);
+    await agent.post(`/api/recomendations/${rec3.body.id}/upvote`);
+    await agent.post(`/api/recomendations/${rec3.body.id}/upvote`);
+
+    const response = await agent.get('/api/recomendations/top/2');
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
+
+    expect(response.body[0]).toHaveProperty('id');
+    expect(response.body[0]).toMatchObject({
+      name: 'Teste 3 - Basta você me ligar',
+      youtubeLink: 'https://www.youtube.com/watch?v=k4xGU8xoA6w',
+      score: 3,
+      genres: [
+        {
+          id: result.body.id,
+          name: 'forró',
+        },
+      ],
+    });
+    expect(response.body[1]).toHaveProperty('id');
+    expect(response.body[1]).toMatchObject({
+      name: 'Teste 2 - Basta você me ligar',
+      youtubeLink: 'https://www.youtube.com/watch?v=k4xGU8xoA6w',
+      score: 2,
+      genres: [
+        {
+          id: result.body.id,
+          name: 'forró',
+        },
+      ],
+    });
+  });
+});
