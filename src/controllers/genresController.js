@@ -1,6 +1,5 @@
 const Genre = require("../models/Genre");
-const { AlredyExistsError } = require("../erros");
-const { func } = require("joi");
+const { AlredyExistsError } = require("../errors");
 
 async function create(name) {
   const alredyExist = await Genre.findOne({ where: { name } });

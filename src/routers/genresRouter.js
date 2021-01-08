@@ -3,7 +3,7 @@ const sanitize = require("sanitize-html");
 
 const { genresSchemas } = require("../schemas");
 const genresController = require("../controllers/genresController");
-const AlredyExistsError = require("../erros/AlredyExistsError");
+const { AlredyExistsError } = require("../errors");
 
 router.post("/", async (req, res) => {
   if (genresSchemas.create.validate(req.body).error) {

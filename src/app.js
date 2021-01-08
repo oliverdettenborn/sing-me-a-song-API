@@ -18,5 +18,6 @@ app.use((req, res, next) => {
 const routers = require("./routers");
 
 app.use("/api/genres", routers.genres);
+app.use("/api/recomendations", routers.recomendations);
 
 module.exports = app;
