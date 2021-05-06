@@ -26,7 +26,7 @@
     "express": "^4.17.1",
     "joi": "^17.3.0",
     "pg": "^8.5.1",
-    "sanitize-html": "^2.3.0",
+    "sanitize-html": "^2.3.2",
     "sequelize": "^6.3.5"
   },
   "devDependencies": {
